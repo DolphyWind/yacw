@@ -21,6 +21,7 @@ target_include_directories(${YACW_LIBRARY_NAME} PUBLIC
 )
 
 set(CURSES_NEED_WIDE TRUE)
+set(CURSES_NEED_NCURSES TRUE)
 find_package(Curses REQUIRED)
 target_include_directories(${YACW_LIBRARY_NAME} INTERFACE ${Curses_INCLUDE_DIRS})
 target_link_libraries(${YACW_LIBRARY_NAME} PRIVATE ${Curses_LIBRARIES})
