@@ -26,6 +26,7 @@ set(CURSES_NEED_NCURSES TRUE)
 if(MSVC OR WIN32)
     add_subdirectory(include/thirdparty/pdcurses)
     set(HAS_PDCURSES TRUE)
+    set(PDCURSES_TARGET_NAME PDCurses)
     message(STATUS "Found PDCurses")
 else()
     find_package(Curses REQUIRED)
@@ -62,7 +63,7 @@ if(HAS_NCURSES)
     )
 endif()
 
-install(TARGETS ${YACW_LIBRARY_NAME}
+install(TARGETS ${YACW_LIBRARY_NAME} ${PDCURSES_TARGET_NAME}
     EXPORT ${YACW_LIBRARY_TARGETS}
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
