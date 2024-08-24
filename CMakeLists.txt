@@ -21,9 +21,8 @@ target_include_directories(${YACW_LIBRARY_NAME} PUBLIC
 )
 
 set(CURSES_NEED_WIDE TRUE)
-set(CURSES_NEED_NCURSES TRUE)
-
 if(MSVC OR WIN32)
+    set(CURSES_NEED_NCURSES TRUE)
     add_subdirectory(include/thirdparty/pdcurses)
     set_target_properties(PDCurses PROPERTIES LINKER_LANGUAGE C)
     set(HAS_PDCURSES TRUE)
