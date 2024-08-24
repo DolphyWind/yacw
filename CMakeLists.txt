@@ -63,32 +63,35 @@ if(HAS_NCURSES)
     )
 endif()
 
-install(TARGETS ${YACW_LIBRARY_NAME} ${PDCURSES_TARGET_NAME}
-    EXPORT ${YACW_LIBRARY_TARGETS}
-    ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib
-    RUNTIME DESTINATION bin
-)
+# Install instruction only works on unix-like systems for now
+if(UNIX)
+    install(TARGETS ${YACW_LIBRARY_NAME} ${PDCURSES_TARGET_NAME}
+        EXPORT ${YACW_LIBRARY_TARGETS}
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib
+        RUNTIME DESTINATION bin
+    )
 
-install(DIRECTORY include/ DESTINATION include)
+    install(DIRECTORY include/ DESTINATION include)
 
-install(EXPORT ${YACW_LIBRARY_TARGETS}
-    FILE yacwConfig.cmake
-    NAMESPACE yacw::
-    DESTINATION lib/cmake/yacw
-)
+    install(EXPORT ${YACW_LIBRARY_TARGETS}
+        FILE yacwConfig.cmake
+        NAMESPACE yacw::
+        DESTINATION lib/cmake/yacw
+    )
 
-include(CMakePackageConfigHelpers)
-write_basic_package_version_file(
-    "${CMAKE_CURRENT_BINARY_DIR}/yacwConfigVersion.cmake"
-    VERSION ${PROJECT_VERSION}
-    COMPATIBILITY AnyNewerVersion
-)
+    include(CMakePackageConfigHelpers)
+    write_basic_package_version_file(
+        "${CMAKE_CURRENT_BINARY_DIR}/yacwConfigVersion.cmake"
+        VERSION ${PROJECT_VERSION}
+        COMPATIBILITY AnyNewerVersion
+    )
 
-install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/yacwConfigVersion.cmake"
-    DESTINATION lib/cmake/yacw
-)
+    install(FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/yacwConfigVersion.cmake"
+        DESTINATION lib/cmake/yacw
+    )
+endif()
 
 # Testing
 option(BUILD_TESTS "Build Tests" ON)
