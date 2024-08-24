@@ -22,10 +22,45 @@ target_include_directories(${YACW_LIBRARY_NAME} PUBLIC
 
 set(CURSES_NEED_WIDE TRUE)
 set(CURSES_NEED_NCURSES TRUE)
-find_package(Curses REQUIRED)
-target_include_directories(${YACW_LIBRARY_NAME} INTERFACE ${Curses_INCLUDE_DIRS})
-target_link_libraries(${YACW_LIBRARY_NAME} PRIVATE ${Curses_LIBRARIES})
 
+if(MSVC OR WIN32)
+    add_subdirectory(include/thirdparty/pdcurses)
+    set(HAS_PDCURSES TRUE)
+    message(STATUS "Found PDCurses")
+else()
+    find_package(Curses REQUIRED)
+    if(CURSES_FOUND)
+        set(HAS_NCURSES TRUE)
+        message(STATUS "Found NCurses")
+    else()
+        message(ERROR "Curses is not found")
+    endif()
+endif()
+
+if(HAS_PDCURSES)
+    target_link_libraries(${YACW_LIBRARY_NAME}
+        PRIVATE
+        PDCurses
+    )
+    target_compile_definitions(${YACW_LIBRARY_NAME}
+        PRIVATE
+        HAS_PDCURSES
+    )
+endif()
+if(HAS_NCURSES)
+    target_include_directories(${YACW_LIBRARY_NAME}
+        PRIVATE
+        ${CURSES_INCLUDE_DIRS}
+    )
+    target_link_libraries(${YACW_LIBRARY_NAME}
+        PRIVATE
+        ${CURSES_LIBRARIES}
+    )
+    target_compile_definitions(${YACW_LIBRARY_NAME}
+        PRIVATE
+        HAS_NCURSES
+    )
+endif()
 
 install(TARGETS ${YACW_LIBRARY_NAME}
     EXPORT ${YACW_LIBRARY_TARGETS}
