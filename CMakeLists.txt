@@ -25,6 +25,7 @@ set(CURSES_NEED_NCURSES TRUE)
 
 if(MSVC OR WIN32)
     add_subdirectory(include/thirdparty/pdcurses)
+    set_target_properties(PDCurses PROPERTIES LINKER_LANGUAGE C)
     set(HAS_PDCURSES TRUE)
     set(PDCURSES_TARGET_NAME PDCurses)
     message(STATUS "Found PDCurses")
