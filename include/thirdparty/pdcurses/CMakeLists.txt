@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
 set(TARGET_LIBRARY_NAME PDCurses)
-set
 
 add_library(${TARGET_LIBRARY_NAME} STATIC
     pdcurses/addch.c
