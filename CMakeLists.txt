@@ -9,10 +9,9 @@ set(YACW_LIBRARY_NAME yacw)
 set(YACW_LIBRARY_TARGETS yacw_targets)
 set(INCLUDE_DIRNAME include)
 
-include_directories(${INCLUDE_DIRNAME})
-
 set(SOURCE_FILES
     src/yacw.cpp
+    src/string.cpp
 )
 add_library(${YACW_LIBRARY_NAME} STATIC ${SOURCE_FILES})
 target_include_directories(${YACW_LIBRARY_NAME} PUBLIC 
@@ -37,13 +36,15 @@ else()
     endif()
 endif()
 
+include_directories(${INCLUDE_DIRNAME})
+
 if(HAS_PDCURSES)
     target_link_libraries(${YACW_LIBRARY_NAME}
         PRIVATE
         PDCurses
     )
     target_compile_definitions(${YACW_LIBRARY_NAME}
-        PRIVATE
+        PUBLIC
         HAS_PDCURSES
     )
 endif()
@@ -57,7 +58,7 @@ if(HAS_NCURSES)
         ${CURSES_LIBRARIES}
     )
     target_compile_definitions(${YACW_LIBRARY_NAME}
-        PRIVATE
+        INTERFACE
         HAS_NCURSES
     )
 endif()
