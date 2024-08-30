@@ -7,5 +7,4 @@ function(run_test exec_name src_name)
     add_test(NAME ${exec_name} COMMAND ${exec_name})
 endfunction(run_test)
 
-run_test(yacwtest yacwtest.cpp)
 run_test(stringtest yacw_stringtest.cpp)

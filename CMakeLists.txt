@@ -5,6 +5,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 include(CTest)
 enable_testing()
 
+option(BUILD_TESTS "Build Tests" ON)
+option(ENABLE_COVERAGE "Enable Coverage Output" OFF)
+
 set(YACW_LIBRARY_NAME yacw)
 set(YACW_LIBRARY_TARGETS yacw_targets)
 set(INCLUDE_DIRNAME include)
@@ -63,6 +66,29 @@ if(HAS_NCURSES)
     )
 endif()
 
+if (ENABLE_COVERAGE)
+    if (NOT BUILD_TESTS)
+        message(WARNING "Testing must be enabled for coverage analysis")
+    else()
+        if (CMAKE_CXX_COMPILER_ID STREQUAL "Clangd" OR 
+            CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+            set(CMAKE_BUILD_TYPE "Debug")
+            set(CMAKE_CXX_FLAGS
+                "${CMAKE_CXX_FLAGS} -O0 -coverage")
+
+            find_program(LCOV lcov REQUIRED)
+            find_program(GENHTML genhtml REQUIRED)
+            add_custom_target(coverage
+                COMMAND ${LCOV} --directory . --capture --output-file coverage.info
+                COMMAND ${GENHTML} --demangle-cpp -o coverage coverage.info
+                WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+            )
+        else()
+            message(WARNING "ENABLE_COVERAGE option is only available for Clang or GCC")
+        endif()
+    endif()
+endif()
+
 # Install instruction only works on unix-like systems for now
 if(UNIX)
     install(TARGETS ${YACW_LIBRARY_NAME} ${PDCURSES_TARGET_NAME}
@@ -93,11 +119,8 @@ if(UNIX)
     )
 endif()
 
-# Testing
-option(BUILD_TESTS "Build Tests" ON)
-
 if(BUILD_TESTS)
-	message(STATUS "Testing is enabled. To run tests, please use CTest executable.")
+	message(STATUS "Testing is enabled. To run tests, please run `make test`.")
 	add_subdirectory(tests)
 else()
 	message(STATUS "Testing is disabled.")
